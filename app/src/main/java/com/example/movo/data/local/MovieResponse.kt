@@ -4,12 +4,12 @@ package com.example.movo.data.local
 import com.google.gson.annotations.SerializedName
 
 data class MovieResponse(
-    @SerializedName("data")
-    val data: List<Movie>,
-    @SerializedName("message")
-    val message: String,
-    @SerializedName("status")
-    val status: Boolean,
-    @SerializedName("timestamp")
-    val timestamp: Long
+    @SerializedName("page")
+    val page: Int,
+    @SerializedName("results")
+    val movies: List<Movie>,
+    @SerializedName("total_pages")
+    val totalPages: Int,
+    @SerializedName("total_results")
+    val totalResults: Int
 )

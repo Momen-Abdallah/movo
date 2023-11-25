@@ -1,23 +1,35 @@
 package com.example.movo.data.local
 
-import androidx.room.Entity
+
 import com.google.gson.annotations.SerializedName
 
-
-@Entity(tableName = "Movie")
 data class Movie(
+    @SerializedName("adult")
+    val adult: Boolean,
+    @SerializedName("backdrop_path")
+    val backdropPath: String,
+    @SerializedName("genre_ids")
+    val genreIds: List<Int>,
     @SerializedName("id")
-    val id: String,
-    @SerializedName("image")
-    val image: String,
-    @SerializedName("q")
-    val q: String,
-    @SerializedName("qid")
-    val qid: String,
-    @SerializedName("stars")
-    val stars: String,
+    val id: Int,
+    @SerializedName("original_language")
+    val originalLanguage: String,
+    @SerializedName("original_title")
+    val originalTitle: String,
+    @SerializedName("overview")
+    val overview: String,
+    @SerializedName("popularity")
+    val popularity: Double,
+    @SerializedName("poster_path")
+    val posterPath: String,
+    @SerializedName("release_date")
+    val releaseDate: String,
     @SerializedName("title")
     val title: String,
-    @SerializedName("year")
-    val year: Int
+    @SerializedName("video")
+    val video: Boolean,
+    @SerializedName("vote_average")
+    val voteAverage: Double,
+    @SerializedName("vote_count")
+    val voteCount: Int
 )

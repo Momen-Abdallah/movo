@@ -68,6 +68,15 @@ dependencies {
     kapt("androidx.room:room-compiler:$room_version")
     // optional - Paging 3 Integration
     implementation("androidx.room:room-paging:$room_version")
+    implementation ("com.github.leonardoxh:retrofit2-livedata-adapter:1.1.2")
 
+    implementation ("com.airbnb.android:epoxy:5.1.3")
+    // Add the annotation processor if you are using Epoxy's annotations (recommended)
+    kapt ("com.airbnb.android:epoxy-processor:5.1.3")
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
+    implementation ("me.relex:circleindicator:2.1.6")
+    val paging_version = "3.2.1"
 
+    implementation("androidx.paging:paging-runtime:3.2.1")
+    implementation("io.coil-kt:coil:2.5.0")
 }

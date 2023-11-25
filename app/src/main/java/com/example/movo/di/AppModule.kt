@@ -1,8 +1,8 @@
 package com.example.movo.di
 
 import com.example.movo.data.remote.MovieApi
+import com.example.movo.data.repo.MovieRepository
 import com.example.movo.utils.Utils
-import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,21 +15,43 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class AppModule {
-
+    @Singleton
+    @Provides
+    fun getMovieRepository(movieApi: MovieApi)  = MovieRepository(movieApi)
 
     @Singleton
     @Provides
+//    @Named("RetrofitMovieApi")
     fun getRetrofit()
           = Retrofit.Builder()
-            .baseUrl(Utils.BASE_URL)
+            .baseUrl(Utils.TMDB_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
+//            .addCallAdapterFactory(LiveDataCallAdapterFactory.create())
             .build()
 
 
 
     @Singleton
     @Provides
-    fun getMovieApi(retrofit: Retrofit)  = retrofit.create(MovieApi::class.java)
+//    @Named("MovieApi")
+    fun getMovieApi(
+//        @Named("RetrofitMovieApi")
+                    retrofit: Retrofit)  = retrofit.create(MovieApi::class.java)
 
+
+//    @Singleton
+//    @Provides
+//    @Named("RetrofitMovieStreamingApi")
+//    fun getRetrofitStreaming()
+//            = Retrofit.Builder()
+//        .baseUrl(Utils.STREAMING_BASE_URL)
+//        .addConverterFactory(GsonConverterFactory.create())
+//        .addCallAdapterFactory(LiveDataCallAdapterFactory.create())
+//        .build()
+
+//    @Singleton
+//    @Provides
+//    @Named("MovieStreamingApi")
+//    fun getMovieStreamingApi(@Named("RetrofitMovieStreamingApi")retrofit: Retrofit)  = retrofit.create(MovieStreamingAPI::class.java)
 
 }
