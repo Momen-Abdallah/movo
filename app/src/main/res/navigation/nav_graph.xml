@@ -10,8 +10,19 @@
         android:name="com.example.movo.ui.homeScreen.HomeScreen"
         android:label="@string/first_fragment_label"
         tools:layout="@layout/home_screen">
-
-
+        <action
+            android:id="@+id/action_HomeScreen_to_movieScreen"
+            app:destination="@id/movieScreen" />
     </fragment>
+    <fragment
+        android:id="@+id/movieScreen"
+        android:name="com.example.movo.ui.movieScreen.MovieScreen"
+        android:label="movie_screen"
+        tools:layout="@layout/movie_screen" >
+        <argument
+            android:name="query"
+            app:argType="string" />
+    </fragment>
+
 
 </navigation>

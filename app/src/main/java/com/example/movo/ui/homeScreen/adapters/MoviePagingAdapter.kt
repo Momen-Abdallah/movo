@@ -1,4 +1,4 @@
-package com.example.movo.ui.homeScreen
+package com.example.movo.ui.homeScreen.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.bumptech.glide.Glide
 import com.example.movo.data.local.Movie
 import com.example.movo.databinding.MovieListItemBinding
 import com.example.movo.utils.MovieComparator
@@ -19,7 +18,8 @@ class MoviePagingAdapter(val context : Context) : PagingDataAdapter<Movie, Movie
 
     override fun onBindViewHolder(holder: Movie1ViewHolder, position: Int) {
 
-        holder.binding.title.text = getItem(position)!!.title
+//        holder.binding.title.text = getItem(position)!!.title
+        holder.binding.rating.text = getItem(position)!!.voteAverage.toString().substring(0,3)
         try {
 
             holder.binding.posterImage.load("https://image.tmdb.org/t/p/w500/" + getItem(position)!!.posterPath)

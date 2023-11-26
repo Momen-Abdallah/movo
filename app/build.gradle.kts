@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+    id("androidx.navigation.safeargs")
 }
 
 android {
@@ -43,6 +44,8 @@ android {
 kapt {
     correctErrorTypes = true
 }
+
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -51,6 +54,9 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.legacy.support.v4)
+    implementation(libs.lifecycle.livedata.ktx)
+    implementation(libs.lifecycle.viewmodel.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -79,4 +85,6 @@ dependencies {
 
     implementation("androidx.paging:paging-runtime:3.2.1")
     implementation("io.coil-kt:coil:2.5.0")
+
+
 }

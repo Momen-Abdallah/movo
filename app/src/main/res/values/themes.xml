@@ -3,7 +3,8 @@
     <style name="Base.Theme.Movo" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-    </style>
+        <item name="android:fontFamily">@font/archivo_black</item>
 
+    </style>
     <style name="Theme.Movo" parent="Base.Theme.Movo" />
 </resources>

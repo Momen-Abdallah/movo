@@ -1,4 +1,4 @@
-package com.example.movo.ui.homeScreen
+package com.example.movo.ui.homeScreen.adapters
 
 import android.content.Context
 import android.view.LayoutInflater

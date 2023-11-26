@@ -8,10 +8,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="16dp"
-        android:elevation="8dp"
+        app:cardElevation="12dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:cornerRadius="16dp">
+        style="@style/Widget.Material3.CardView.Elevated"
+        app:cornerRadius="16dp"
+    >
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -38,10 +40,22 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginBottom="30dp"
             android:layout_marginTop="20dp"
-            android:text="Unknown"
+            android:text=""
             />
 
-
+        <TextView
+            android:id="@+id/rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@android:color/holo_orange_light"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:textSize="12sp"
+            android:paddingVertical="1dp"
+            android:paddingHorizontal="2dp"
+            />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

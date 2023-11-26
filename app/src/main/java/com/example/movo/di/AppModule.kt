@@ -21,7 +21,6 @@ class AppModule {
 
     @Singleton
     @Provides
-//    @Named("RetrofitMovieApi")
     fun getRetrofit()
           = Retrofit.Builder()
             .baseUrl(Utils.TMDB_BASE_URL)
@@ -33,25 +32,8 @@ class AppModule {
 
     @Singleton
     @Provides
-//    @Named("MovieApi")
-    fun getMovieApi(
-//        @Named("RetrofitMovieApi")
-                    retrofit: Retrofit)  = retrofit.create(MovieApi::class.java)
+    fun getMovieApi(retrofit: Retrofit)  = retrofit.create(MovieApi::class.java)
 
 
-//    @Singleton
-//    @Provides
-//    @Named("RetrofitMovieStreamingApi")
-//    fun getRetrofitStreaming()
-//            = Retrofit.Builder()
-//        .baseUrl(Utils.STREAMING_BASE_URL)
-//        .addConverterFactory(GsonConverterFactory.create())
-//        .addCallAdapterFactory(LiveDataCallAdapterFactory.create())
-//        .build()
-
-//    @Singleton
-//    @Provides
-//    @Named("MovieStreamingApi")
-//    fun getMovieStreamingApi(@Named("RetrofitMovieStreamingApi")retrofit: Retrofit)  = retrofit.create(MovieStreamingAPI::class.java)
 
 }

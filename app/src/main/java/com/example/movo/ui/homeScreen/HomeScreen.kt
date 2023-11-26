@@ -1,20 +1,34 @@
 package com.example.movo.ui.homeScreen
 
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuProvider
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.example.movo.R
 import com.example.movo.databinding.HomeScreenBinding
+import com.example.movo.ui.homeScreen.adapters.Movie2PagingAdapter
+import com.example.movo.ui.homeScreen.adapters.MovieLoadStateAdapter
+import com.example.movo.ui.homeScreen.adapters.MoviePagingAdapter
+import com.example.movo.ui.movieScreen.adapters.MovieSearchAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.concurrent.timer
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -53,115 +67,166 @@ class HomeScreen : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.menu_main,menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when(menuItem.itemId){
+                    R.id.search_icon ->{
+                        binding.searchView.show()
+//                        findNavController().navigate(R.id.action_HomeScreen_to_movieScreen)
+
+
+                        true
+
+                    }
+
+                    else->{
+                        true
+                    }
+                }
+            }
+
+        })
+
+        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
 
 
 
-
-//        binding.viewPager.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
-//        var response : Response<MovieResponse>? = null;
         setupCarousel()
-//        lifecycleScope.launch {
-//            mViewModel.searchMovie("batman")
-//            mViewModel.searchedMovies.observe(viewLifecycleOwner){
-//                when(it.status){
-//                    DataStatus.Status.LOADING->{
-//                        Toast.makeText(requireContext(), "Loading...", Toast.LENGTH_SHORT).show()
-//                    }
-//                    DataStatus.Status.SUCCESS->{
-//                        binding.viewPager.adapter = MovieViewPagerAdapter(requireContext(),it.data!!.data)
-//                        dataSize = it.data.data.size
-//                        viewPagerActive.value = true
-//                        binding.indicator.setViewPager(binding.viewPager)
-//                    }
-//                    DataStatus.Status.ERROR->{
-//                        Toast.makeText(requireContext(), "Error during the data request", Toast.LENGTH_SHORT).show()
-//                    }
-//
-//                }
-//
-//            }
-//        }
 
 
-//        var movies = listOf<Movie>()
-        val adapter = MoviePagingAdapter(requireContext())
+        val viewPagerAdapter = MoviePagingAdapter(requireContext())
+        val topRatedRecyclerViewAdapter = Movie2PagingAdapter(requireContext())
+        val upcomingRecyclerViewAdapter = Movie2PagingAdapter(requireContext())
+        val searchMoviesRecyclerViewAdapter = MovieSearchAdapter()
+
 
         binding.apply {
 
-            recyclerView.layoutManager =  LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
-            recyclerView.setHasFixedSize(true)
 
-            recyclerView.adapter = adapter.withLoadStateFooter(
-                MovieLoadStateAdapter(){adapter.retry()}
+            topRatedRecyclerView.layoutManager =  LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
+            topRatedRecyclerView.setHasFixedSize(true)
+
+            topRatedRecyclerView.adapter = topRatedRecyclerViewAdapter.withLoadStateFooter(
+                MovieLoadStateAdapter(){topRatedRecyclerViewAdapter.retry()}
             )
 
-            viewPager.adapter =  adapter.withLoadStateFooter(
-                    MovieLoadStateAdapter(){adapter.retry()}
+            upcomingRecyclerView.layoutManager =  LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
+            upcomingRecyclerView.setHasFixedSize(true)
+
+            upcomingRecyclerView.adapter = upcomingRecyclerViewAdapter.withLoadStateFooter(
+                MovieLoadStateAdapter(){upcomingRecyclerViewAdapter.retry()}
             )
+            viewPager.adapter =  viewPagerAdapter.withLoadStateFooter(
+                    MovieLoadStateAdapter(){viewPagerAdapter.retry()}
+            )
+
+//            binding.recyclerView.layoutManager =  LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
+//            binding.recyclerView.adapter = searchMoviesRecyclerViewAdapter
+//                .withLoadStateFooter(
+//                MovieLoadStateAdapter(){upcomingRecyclerViewAdapter.retry()}
+//            )
 
         }
-        mViewModel.searchMovie("batman")
+        mViewModel.getPopularMovies()
+        mViewModel.getTopRatedMovies()
+        mViewModel.getUpcomingMovies()
 
+
+
+
+//        binding.searchView.editText.addTextChangedListener {
+//
+//              if (it != null&&it.toString().length>=5)
+//            mViewModel.searchMovie(it.toString())
+//        }
+
+        binding.searchView.editText.setOnEditorActionListener { textView, i, keyEvent ->
+
+            if (textView.text.isNotEmpty()){
+                findNavController().navigate(HomeScreenDirections.actionHomeScreenToMovieScreen(textView.text.toString()))
+            }
+            else
+                binding.searchView.show()
+
+            true
+        }
 
 
 //        mViewModel.searchedMovies.observe(viewLifecycleOwner){
 //            adapter.submitData(lifecycle,it)
 //        }
-
-
         lifecycleScope.launch {
-            viewPagerActive.value = true
-            mViewModel.searchedMovies.collect {
-                adapter.submitData(lifecycle,it)
+            mViewModel.topRatedMovies.collect {
+                topRatedRecyclerViewAdapter.submitData(lifecycle,it)
             }
         }
+        lifecycleScope.launch {
+            mViewModel.upComingMovies.collect {
+                upcomingRecyclerViewAdapter.submitData(lifecycle,it)
+            }
+        }
+        lifecycleScope.launch {
+            viewPagerActive.value = true
+            mViewModel.popularMovies.collect {
+                viewPagerAdapter.submitData(lifecycle,it)
+            }
+        }
+//        lifecycleScope.launch(Dispatchers.IO) {
+//            mViewModel.searchedMovies.collect {
+//                searchMoviesRecyclerViewAdapter.submitData(lifecycle,it)
+//            }
+//        }
 
 
        // binding.recyclerView.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
-        lifecycleScope.launch {
-//            movies = Retrofit.Builder()
-//                .baseUrl(Utils.BASE_URL)
-//                .addConverterFactory(GsonConverterFactory.create())
-////            .addCallAdapterFactory(LiveDataCallAdapterFactory.create())
-//                .build().create(MovieApi::class.java).search(1,"batman").results.filter { !it.imageurl.isNullOrEmpty() }.take(10)
-//
-//
-//            val adapter= Movie1PagingAdapter(requireContext())
-//
-//            mViewModel.search("Django").collect{
-//                adapter.submitData(it)
-//            }
-//
-//            binding.viewPager.adapter = adapter
-//            viewPagerActive.value = true
-//            mViewModel.search("Django").collect{
-//
-//                val adapter = Movie1PagingAdapter(requireContext()).withLoadStateFooter(MovieLoadStateAdapter())
-//                adapter.notifyDataSetChanged()
-//                binding.recyclerView.adapter = adapter
-//
-//            }
-        }.invokeOnCompletion {
-//            if (movies.isNotEmpty())
-//                Toast.makeText(requireContext(), "${movies.size}", Toast.LENGTH_SHORT).show()
-//            binding.viewPager.adapter = MovieViewPagerAdapter(
-//                requireContext(),
-//                movies
-//            )
-        }
+//        lifecycleScope.launch {
+////            movies = Retrofit.Builder()
+////                .baseUrl(Utils.BASE_URL)
+////                .addConverterFactory(GsonConverterFactory.create())
+//////            .addCallAdapterFactory(LiveDataCallAdapterFactory.create())
+////                .build().create(MovieApi::class.java).search(1,"batman").results.filter { !it.imageurl.isNullOrEmpty() }.take(10)
+////
+////
+////            val adapter= Movie1PagingAdapter(requireContext())
+////
+////            mViewModel.search("Django").collect{
+////                adapter.submitData(it)
+////            }
+////
+////            binding.viewPager.adapter = adapter
+////            viewPagerActive.value = true
+////            mViewModel.search("Django").collect{
+////
+////                val adapter = Movie1PagingAdapter(requireContext()).withLoadStateFooter(MovieLoadStateAdapter())
+////                adapter.notifyDataSetChanged()
+////                binding.recyclerView.adapter = adapter
+////
+////            }
+//        }.invokeOnCompletion {
+////            if (movies.isNotEmpty())
+////                Toast.makeText(requireContext(), "${movies.size}", Toast.LENGTH_SHORT).show()
+////            binding.viewPager.adapter = MovieViewPagerAdapter(
+////                requireContext(),
+////                movies
+////            )
+//        }
 
-        viewPagerActive.observe(viewLifecycleOwner){
-            if (it)
-                lifecycleScope.launch {
-                    while (it) {
-                        delay(2000)
-//                        if (binding.viewPager.currentItem == dataSize!!-1)
-//                            binding.viewPager.currentItem = 0
-//                        else
-                            binding.viewPager.currentItem++
-                    }
-                }
-        }
+        object: CountDownTimer(100000, 3000){
+            override fun onTick(p0: Long) {
+                if (viewPagerActive .value!= null&& viewPagerActive.value!!)
+                    binding.viewPager.currentItem++
+            }
+
+            override fun onFinish() {
+                //add your code here
+            }
+        }.start()
+
+
 //        timer(initialDelay = 3000L, period = 10000L ) {
 ////            lifecycleScope.launch {
 ////                while (it) {
@@ -230,7 +295,7 @@ class HomeScreen : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+//        _binding = null
     }
 
     fun setupCarousel() {
@@ -254,6 +319,7 @@ class HomeScreen : Fragment() {
             R.dimen.viewpager_current_item_horizontal_margin
         )
         viewPager.addItemDecoration(itemDecoration)
+
 
 
     }
