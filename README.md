@@ -1,5 +1,4 @@
-Android movies streaming app
-the app is using the "https://api.themoviedb.org/3/" API for getting any kind of movies information,
+Android movies streaming app using "https://api.themoviedb.org/3/" API for getting any kind of movies information,
 and "https://vidsrc.xyz" for movies streaming
 
 ## Features
