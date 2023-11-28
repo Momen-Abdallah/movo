@@ -1,5 +1,5 @@
-Movo it is an Android movies streaming app
-the app is using the "https://api.themoviedb.org/3/" API for getting movies info,
+Android movies streaming app
+the app is using the "https://api.themoviedb.org/3/" API for getting any kind of movies information,
 and "https://vidsrc.xyz" for movies streaming
 
 ## Features
@@ -9,3 +9,5 @@ and "https://vidsrc.xyz" for movies streaming
 * Kotlin Coroutines
 * Single activity pattern
 * Dependency injection
+  
+![image](https://github.com/Momen-Abdallah/movo/assets/82732526/974c8c08-5fc2-481d-a3b7-15ec00b4f731)
