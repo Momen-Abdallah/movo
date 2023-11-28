@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MovieScreenViewModel @Inject constructor(
-    val movieRepository: MovieRepository
+    private val movieRepository: MovieRepository
 ) :ViewModel(){
 //    private var _searchedMovies  =  MutableLiveData<PagingData<Movie>>(PagingData.empty())
     private var _searchedMovies  =  MutableStateFlow<PagingData<Movie>>(PagingData.empty())
@@ -40,7 +40,7 @@ class MovieScreenViewModel @Inject constructor(
                 region = region,
                 year = year
             )
-//                .cachedIn(viewModelScope)
+                .cachedIn(viewModelScope)
                 .collect{
                     _searchedMovies.value = it
                 }

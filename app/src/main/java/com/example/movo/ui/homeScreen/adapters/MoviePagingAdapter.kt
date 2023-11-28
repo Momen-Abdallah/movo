@@ -1,13 +1,18 @@
 package com.example.movo.ui.homeScreen.adapters
 
+import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.movo.data.local.Movie
 import com.example.movo.databinding.MovieListItemBinding
+import com.example.movo.ui.homeScreen.HomeScreenDirections
 import com.example.movo.utils.MovieComparator
 
 class MoviePagingAdapter(val context : Context) : PagingDataAdapter<Movie, MoviePagingAdapter.Movie1ViewHolder>(MovieComparator()
@@ -20,6 +25,22 @@ class MoviePagingAdapter(val context : Context) : PagingDataAdapter<Movie, Movie
 
 //        holder.binding.title.text = getItem(position)!!.title
         holder.binding.rating.text = getItem(position)!!.voteAverage.toString().substring(0,3)
+
+        holder.binding.card.setOnClickListener {
+            if (getItem(position)!=null){
+                try {
+                    val action = HomeScreenDirections.actionHomeScreenToMovieInfoScreen(getItem(position)!!)
+                    Navigation.findNavController(it).navigate(action)
+                }catch (e: Exception){
+                    Toast.makeText(context, "This movie not exit", Toast.LENGTH_SHORT).show()
+
+                }
+
+            }else{
+                Toast.makeText(context, "This movie not exit", Toast.LENGTH_SHORT).show()
+            }
+
+        }
         try {
 
             holder.binding.posterImage.load("https://image.tmdb.org/t/p/w500/" + getItem(position)!!.posterPath)

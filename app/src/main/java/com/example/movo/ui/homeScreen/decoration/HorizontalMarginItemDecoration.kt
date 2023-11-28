@@ -1,4 +1,4 @@
-package com.example.movo.ui.homeScreen
+package com.example.movo.ui.homeScreen.decoration
 
 import android.content.Context
 import android.graphics.Rect

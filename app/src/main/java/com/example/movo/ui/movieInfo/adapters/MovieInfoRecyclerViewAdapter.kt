@@ -1,4 +1,4 @@
-package com.example.movo.ui.homeScreen.adapters
+package com.example.movo.ui.movieInfo.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -9,19 +9,19 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.movo.data.local.Movie
 import com.example.movo.databinding.Movie2ListItemBinding
-import com.example.movo.ui.homeScreen.HomeScreenDirections
+import com.example.movo.ui.movieInfo.MovieInfoScreenDirections
 import com.example.movo.utils.MovieComparator
 
-class Movie2PagingAdapter(val context : Context) : PagingDataAdapter<Movie, Movie2PagingAdapter.Movie1ViewHolder>(
+class MovieInfoRecyclerViewAdapter(val context : Context) : PagingDataAdapter<Movie, MovieInfoRecyclerViewAdapter.MovieInfoRecyclerViewHolder>(
     MovieComparator()
 ) {
-    class Movie1ViewHolder(val binding: Movie2ListItemBinding) : RecyclerView.ViewHolder(binding.root){
+    class MovieInfoRecyclerViewHolder(val binding: Movie2ListItemBinding) : RecyclerView.ViewHolder(binding.root){
 
     }
 
-    override fun onBindViewHolder(holder: Movie1ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MovieInfoRecyclerViewHolder, position: Int) {
         holder.binding.card.setOnClickListener {
-            val action = HomeScreenDirections.actionHomeScreenToMovieInfoScreen(getItem(position)!!)
+            val action = MovieInfoScreenDirections.actionMovieInfoScreenSelf(getItem(position)!!)
             Navigation.findNavController(it).navigate(action)
         }
         holder.binding.title.text = getItem(position)!!.title!!.split(" ").let { if (it.size>=2) it[0]+" "+it[1] else it[0]}
@@ -36,8 +36,8 @@ class Movie2PagingAdapter(val context : Context) : PagingDataAdapter<Movie, Movi
     }
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Movie1ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieInfoRecyclerViewHolder {
         val binding = Movie2ListItemBinding.inflate(LayoutInflater.from(parent.context),parent,false)
-        return Movie1ViewHolder(binding)
+        return MovieInfoRecyclerViewHolder(binding)
     }
 }

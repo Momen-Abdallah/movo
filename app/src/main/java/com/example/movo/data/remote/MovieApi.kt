@@ -53,4 +53,12 @@ interface MovieApi {
         @Path("movie_id") movie_id: Int,
         @Query("language") language: String? = null,
     ) : Response<MovieVideosResponse>
+
+    @Headers("accept: ${Utils.ACCEPT_HEADER}","Authorization: Bearer ${Utils.ACCESS_TOKEN_HEADER}")
+    @GET("movie/{movie_id}/similar")
+    suspend fun getSimilarMovies(
+        @Path("movie_id") movie_id: Int,
+        @Query("language") language: String? = null,
+        @Query("page") page: Int? = null,
+    ) : MovieResponse
 }

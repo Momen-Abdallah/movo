@@ -16,7 +16,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.movo.R
-import com.example.movo.databinding.MovieScreenBinding
+import com.example.movo.databinding.SearchMovieScreenBinding
 import com.example.movo.ui.movieScreen.adapters.MovieSearchAdapter
 import com.google.android.material.search.SearchView
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,7 +32,7 @@ class MovieScreen : Fragment() {
 
 
     val navArgs :MovieScreenArgs by navArgs()
-    private var _binding: MovieScreenBinding? = null
+    private var _binding: SearchMovieScreenBinding? = null
     val viewModel : MovieScreenViewModel by viewModels()
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -43,7 +43,7 @@ class MovieScreen : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        _binding = MovieScreenBinding.inflate(inflater, container, false)
+        _binding = SearchMovieScreenBinding.inflate(inflater, container, false)
 
 //        binding.searchView.requestFocus()
 //
@@ -59,6 +59,8 @@ class MovieScreen : Fragment() {
 //        binding.buttonSecond.setOnClickListener {
 //            findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
 //        }
+
+
 
         val searchBar =  binding.searchBar
         val searchView =  binding.searchView
@@ -103,13 +105,13 @@ class MovieScreen : Fragment() {
 //            adapter.submitData(lifecycle, it)
 //        }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.searchedMovies.collect{
 //                adapter = MovieSearchAdapter()
 //                recyclerView.adapter = adapter
 //                Toast.makeText(requireContext(), "observed", Toast.LENGTH_SHORT).show()
 
-                adapter.submitData(lifecycle, it)
+                adapter.submitData(viewLifecycleOwner.lifecycle, it)
 
             }
         }

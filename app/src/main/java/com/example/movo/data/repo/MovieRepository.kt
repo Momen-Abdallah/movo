@@ -7,15 +7,21 @@ import androidx.paging.PagingData
 import androidx.paging.liveData
 import com.example.movo.data.local.Movie
 import com.example.movo.data.local.MoviePagingSource
+import com.example.movo.data.local.MovieResponse
 import com.example.movo.data.local.MovieVideosResponse
 import com.example.movo.data.remote.MovieApi
+import com.example.movo.utils.Utils
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
+import retrofit2.http.GET
+import retrofit2.http.Headers
+import retrofit2.http.Path
+import retrofit2.http.Query
 import javax.inject.Inject
 
 
 //@Inject constructor
-class MovieRepository @Inject constructor(val movieApi: MovieApi){
+class MovieRepository @Inject constructor(private val movieApi: MovieApi){
 //    suspend fun searchMovie(query : String)  = flow {
 //
 ////        emit(DataStatus.loading())
@@ -132,8 +138,31 @@ class MovieRepository @Inject constructor(val movieApi: MovieApi){
 
     suspend fun getMovieVideosData(
         movieId : Int,
+        language: String? = null
     ) :Response<MovieVideosResponse>{
        return movieApi.getMovieVideos(movieId)
+    }
+
+
+    fun getSimilarMovies(
+        movie_id: Int,
+        language: String? = null,
+    ) : Flow<PagingData<Movie>>{
+        return Pager(
+            config = PagingConfig(
+                pageSize = 20,
+                maxSize = 100,
+                enablePlaceholders = true
+            ),
+            pagingSourceFactory = {
+                MoviePagingSource(
+                    movieApi = movieApi,
+                    action = "similar",
+                    movie_id = movie_id,
+                    language = language
+                )
+            }
+        ).flow
     }
 
 }

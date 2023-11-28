@@ -13,14 +13,45 @@
         <action
             android:id="@+id/action_HomeScreen_to_movieScreen"
             app:destination="@id/movieScreen" />
+        <action
+            android:id="@+id/action_HomeScreen_to_movieInfoScreen"
+            app:destination="@id/movieInfoScreen" />
     </fragment>
     <fragment
         android:id="@+id/movieScreen"
         android:name="com.example.movo.ui.movieScreen.MovieScreen"
         android:label="movie_screen"
-        tools:layout="@layout/movie_screen" >
+        tools:layout="@layout/search_movie_screen" >
         <argument
             android:name="query"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_movieScreen_to_movieInfoScreen"
+            app:destination="@id/movieInfoScreen" />
+    </fragment>
+    <fragment
+        android:id="@+id/movieInfoScreen"
+        android:name="com.example.movo.ui.movieInfo.MovieInfoScreen"
+        android:label="movie_info"
+        tools:layout="@layout/movie_info" >
+        <argument
+            android:name="movie"
+            app:argType="com.example.movo.data.local.Movie" />
+        <action
+            android:id="@+id/action_movieInfoScreen_to_streamingScreen"
+            app:destination="@id/streamingScreen"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_movieInfoScreen_self"
+            app:destination="@id/movieInfoScreen" />
+    </fragment>
+    <fragment
+        android:id="@+id/streamingScreen"
+        android:name="com.example.movo.ui.streamingScreen.StreamingScreen"
+        android:label="streaming_screen"
+        tools:layout="@layout/streaming_screen" >
+        <argument
+            android:name="id"
             app:argType="string" />
     </fragment>
 

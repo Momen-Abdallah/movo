@@ -1,7 +1,6 @@
 package com.example.movo.ui.homeScreen
 
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -10,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
@@ -23,12 +21,13 @@ import com.example.movo.databinding.HomeScreenBinding
 import com.example.movo.ui.homeScreen.adapters.Movie2PagingAdapter
 import com.example.movo.ui.homeScreen.adapters.MovieLoadStateAdapter
 import com.example.movo.ui.homeScreen.adapters.MoviePagingAdapter
+import com.example.movo.ui.homeScreen.decoration.HorizontalMarginItemDecoration
 import com.example.movo.ui.movieScreen.adapters.MovieSearchAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.concurrent.timer
+import kotlinx.coroutines.withContext
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -36,6 +35,7 @@ import kotlin.concurrent.timer
 
 @AndroidEntryPoint
 class HomeScreen : Fragment() {
+
 
     private var _binding: HomeScreenBinding? = null
     private val mViewModel: HomeScreenViewModel by viewModels()
@@ -67,6 +67,17 @@ class HomeScreen : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+//        val r = object: CountDownTimer(100000, 3000){
+//            override fun onTick(p0: Long) {
+//                if (viewPagerActive .value!= null&& viewPagerActive.value!!)
+//                    binding.viewPager.currentItem++
+//            }
+//
+//            override fun onFinish() {
+//                //add your code here
+//            }
+//        }.start()
         requireActivity().addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.menu_main,menu)
@@ -77,10 +88,7 @@ class HomeScreen : Fragment() {
                     R.id.search_icon ->{
                         binding.searchView.show()
 //                        findNavController().navigate(R.id.action_HomeScreen_to_movieScreen)
-
-
                         true
-
                     }
 
                     else->{
@@ -146,8 +154,12 @@ class HomeScreen : Fragment() {
 
         binding.searchView.editText.setOnEditorActionListener { textView, i, keyEvent ->
 
+           val text = textView.text.toString()
             if (textView.text.isNotEmpty()){
-                findNavController().navigate(HomeScreenDirections.actionHomeScreenToMovieScreen(textView.text.toString()))
+                binding.searchView.clearText()
+                findNavController().navigate(HomeScreenDirections.actionHomeScreenToMovieScreen(text))
+//                r.cancel()
+
             }
             else
                 binding.searchView.show()
@@ -159,20 +171,29 @@ class HomeScreen : Fragment() {
 //        mViewModel.searchedMovies.observe(viewLifecycleOwner){
 //            adapter.submitData(lifecycle,it)
 //        }
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             mViewModel.topRatedMovies.collect {
-                topRatedRecyclerViewAdapter.submitData(lifecycle,it)
+                topRatedRecyclerViewAdapter.submitData(viewLifecycleOwner.lifecycle,it)
             }
         }
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             mViewModel.upComingMovies.collect {
-                upcomingRecyclerViewAdapter.submitData(lifecycle,it)
+                upcomingRecyclerViewAdapter.submitData(viewLifecycleOwner.lifecycle,it)
             }
         }
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewPagerActive.value = true
             mViewModel.popularMovies.collect {
-                viewPagerAdapter.submitData(lifecycle,it)
+                viewPagerAdapter.submitData(viewLifecycleOwner.lifecycle,it)
+            }
+        }
+
+
+
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Unconfined) {
+            while (viewPagerActive .value!= null&& viewPagerActive.value!!){
+                delay(3000)
+                withContext(Dispatchers.Main) {binding.viewPager.currentItem++}
             }
         }
 //        lifecycleScope.launch(Dispatchers.IO) {
@@ -215,16 +236,7 @@ class HomeScreen : Fragment() {
 ////            )
 //        }
 
-        object: CountDownTimer(100000, 3000){
-            override fun onTick(p0: Long) {
-                if (viewPagerActive .value!= null&& viewPagerActive.value!!)
-                    binding.viewPager.currentItem++
-            }
 
-            override fun onFinish() {
-                //add your code here
-            }
-        }.start()
 
 
 //        timer(initialDelay = 3000L, period = 10000L ) {
@@ -296,6 +308,11 @@ class HomeScreen : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
 //        _binding = null
+    }
+
+    override fun onPause() {
+        super.onPause()
+
     }
 
     fun setupCarousel() {

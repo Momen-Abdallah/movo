@@ -57,6 +57,13 @@ class MoviePagingSource(
                          region = region,
                      )
                  }
+                 "similar"->{
+                     movieApi.getSimilarMovies(
+                         page = page,
+                         movie_id = movie_id!!,
+                         language = language,
+                     )
+                 }
                  else->{
                      movieApi.getUpcomingMovies(
                          page = page,

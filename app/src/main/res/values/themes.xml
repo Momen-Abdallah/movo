@@ -4,7 +4,7 @@
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <item name="android:fontFamily">@font/archivo_black</item>
-
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
     <style name="Theme.Movo" parent="Base.Theme.Movo" />
 </resources>
