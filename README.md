@@ -9,4 +9,5 @@ and "https://vidsrc.xyz" for movies streaming
 * Single activity pattern
 * Dependency injection
   
-![image](https://github.com/Momen-Abdallah/movo/assets/82732526/974c8c08-5fc2-481d-a3b7-15ec00b4f731)
+![movo_mockup](https://github.com/Momen-Abdallah/movo/assets/82732526/5d85c828-3d82-41b7-b6bc-ea33ac7433bc)
+
